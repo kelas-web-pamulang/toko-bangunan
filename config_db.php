@@ -23,9 +23,16 @@ class ConfigDB
         $this->conn->close();
     }
 
-    public function select($table)
+    public function select($table, $where = [])
     {
-        $query = "SELECT id, name, price, category, stock, created_at FROM $table";
+        $query = "SELECT id, name, price, category, stock, created_at FROM $table where 1=1";
+
+        foreach ($where as $key => $value) {
+            $query .= " $key '$value'";
+        }
+
+//        print_r($query);
+
         $result = $this->conn->query($query);
 
         $data = [];
