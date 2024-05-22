@@ -43,4 +43,18 @@ class ConfigDB
         }
         return $data;
     }
+
+    public function update($table, $data, $id)
+    {
+        $updated_at = date('Y-m-d H:i:s');
+        $query = "UPDATE $table SET ";
+        foreach ($data as $key => $value) {
+            $query .= "$key = '$value', ";
+        }
+        $query .= "updated_at = '$updated_at' WHERE id='$id'";
+
+//        print_r($query);
+
+        return $this->conn->query($query);
+    }
 }

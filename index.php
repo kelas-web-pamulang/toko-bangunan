@@ -33,6 +33,7 @@
                     <th>Category</th>
                     <th>Stock</th>
                     <th>Tgl. Buat</th>
+                    <th colspan="2">Pilihan</th>
                 </tr>
                 </thead>
                 <?php
@@ -60,6 +61,7 @@
                         echo "<td>".$row['category']."</td>";
                         echo "<td>".$row['stock']."</td>";
                         echo "<td>".$row['created_at']."</td>";
+                        echo "<td><a class='btn btn-sm btn-info' href='update.php?id=$row[id]'>Update</a></td>";
                         echo "</tr>";
                     }
                 } else {
