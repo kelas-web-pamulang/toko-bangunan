@@ -49,6 +49,10 @@
                 $conditional = [];
                 if (isset($_GET['search'])) {
                     $conditional['AND name like'] = '%'.$_GET['search'].'%';
+                } else if (isset($_GET['delete'])) {
+                    $query = $db->update('products',[
+                        'deleted_at' => date('Y-m-d H:i:s')
+                    ], $_GET['delete']);
                 }
                 $result = $db->select("products", $conditional);
 
@@ -62,10 +66,11 @@
                         echo "<td>".$row['stock']."</td>";
                         echo "<td>".$row['created_at']."</td>";
                         echo "<td><a class='btn btn-sm btn-info' href='update.php?id=$row[id]'>Update</a></td>";
+                        echo "<td><a class='btn btn-sm btn-danger' href='index.php?delete=$row[id]'>Delete</a></td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='6' class='text-center'>No Data</td></tr>";
+                    echo "<tr><td colspan='8' class='text-center'>No Data</td></tr>";
                 }
 
                 $db->close();

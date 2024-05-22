@@ -13,9 +13,30 @@
         require_once 'config_db.php';
 
         $db = new ConfigDB();
-        $db->connect();
+        $conn = $db->connect();
 
-        $result = $db->select("products", ['AND id=' => $_GET['id']]);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $name = $_POST['name'];
+            $price = $_POST['price'];
+            $category = $_POST['category'];
+            $stock = $_POST['stock'];
+
+            $query = $db->update('products', [
+                'name' => $name,
+                'price' => $price,
+                'category' => $category,
+                'stock' => $stock
+            ], $_GET['id']);
+
+            if ($query) {
+                echo "<div class='alert alert-success mt-3' role='alert'>Data updated successfully</div>";
+            } else {
+                echo "<div class='alert alert-danger mt-3' role='alert'>Error: " . $query . "<br>" . $conn->error . "</div>";
+            }
+            $result = $db->select("products", ['AND id=' => $_GET['id']]);
+        } else {
+            $result = $db->select("products", ['AND id=' => $_GET['id']]);
+        }
     ?>
     <div class="container">
         <h1 class="text-center mt-5">Ubah Data</h1>
@@ -41,25 +62,7 @@
         </form>
 
         <?php
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                $name = $_POST['name'];
-                $price = $_POST['price'];
-                $category = $_POST['category'];
-                $stock = $_POST['stock'];
 
-                $query = $db->update('products', [
-                        'name' => $name,
-                        'price' => $price,
-                        'category' => $category,
-                        'stock' => $stock
-                ], $_GET['id']);
-
-                if ($query) {
-                    echo "<div class='alert alert-success mt-3' role='alert'>Data updated successfully</div>";
-                } else {
-                    echo "<div class='alert alert-danger mt-3' role='alert'>Error: " . $query . "<br>" . $conn->error . "</div>";
-                }
-            }
             $conn->close();
         ?>
     </div>

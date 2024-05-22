@@ -25,7 +25,7 @@ class ConfigDB
 
     public function select($table, $where = [])
     {
-        $query = "SELECT id, name, price, category, stock, created_at FROM $table where 1=1";
+        $query = "SELECT id, name, price, category, stock, created_at FROM $table where deleted_at is null";
 
         foreach ($where as $key => $value) {
             $query .= " $key '$value'";
