@@ -31,7 +31,7 @@ class ConfigDB
             $query .= " $key '$value'";
         }
 
-//        print_r($query);
+        print_r($query);
 
         $result = $this->conn->query($query);
 
