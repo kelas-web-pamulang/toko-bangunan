@@ -13,14 +13,14 @@
         <h1 class="text-center mt-5">List Product</h1>
         <div class="row">
             <div class="d-flex justify-content-between">
-                <form action="" method="get" class="d-flex">
+                <form action="" method="get" class="d-flex align-items-center">
                     <input class="form-control" placeholder="Cari Data" name="search"/>
-                    <select name="search_by">
+                    <select name="search_by" class="form-select">
                         <option value="">Search All</option>
                         <option value="name">Name</option>
                         <option value="category">Category</option>
                     </select>
-                    <button type="submit" class="btn btn-success btn-sm">Cari</button>
+                    <button type="submit" class="btn btn-success mx-2">Cari</button>
                 </form>
                 <a href="insert.php" class="ml-auto mb-2"><button class="btn btn-success">Tambah Data</button></a>
             </div>
@@ -54,15 +54,16 @@
                         'deleted_at' => date('Y-m-d H:i:s')
                     ], $_GET['delete']);
                 }
-                $result = $db->select("products", $conditional);
+                $result = $conn->query("select a.id, a.name, a.price, a.stock, a.created_at, b.name as category_name from products a left join categories b on a.id_category=b.id");
+                $totalRows = $result->num_rows;
 
-                if (count($result)) {
+                if ($totalRows > 0) {
                     foreach ($result as $key => $row) {
                         echo "<tr>";
                         echo "<td>".($key + 1)."</td>";
                         echo "<td>".$row['name']."</td>";
                         echo "<td>".$row['price']."</td>";
-                        echo "<td>".$row['category']."</td>";
+                        echo "<td>".$row['category_name']."</td>";
                         echo "<td>".$row['stock']."</td>";
                         echo "<td>".$row['created_at']."</td>";
                         echo "<td><a class='btn btn-sm btn-info' href='update.php?id=$row[id]'>Update</a></td>";
