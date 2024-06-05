@@ -46,6 +46,24 @@
                 $db = new ConfigDB();
                 $conn = $db->connect();
 
+                if (isset($_COOKIE['clientSecret'])) {
+                    $checkUser = $conn->query("select id, full_name, email from users where id=".$_COOKIE['clientId']);
+                    if ($checkUser->num_rows > 0) {
+                        $user = $checkUser->fetch_assoc();
+                        if ($_COOKIE['clientSecret'] == hash('sha256', $user['email'])) {
+                            $_SESSION['user'] = [
+                                'id' => $user['id'],
+                                'name' => $user['full_name'],
+                                'email' => $user['email']
+                            ];
+                        }
+                    }
+                }
+
+                if (!isset($_SESSION['user'])) {
+                    header('Location: login.php');
+                }
+
                 $conditional = [];
                 if (isset($_GET['search'])) {
                     $conditional['AND name like'] = '%'.$_GET['search'].'%';
@@ -78,6 +96,7 @@
                 ?>
             </table>
         </div>
+        <a href="logout.php" class="ml-auto mb-2"><button class="btn btn-danger">Logout</button></a>
     </div>
 </body>
 </html>
