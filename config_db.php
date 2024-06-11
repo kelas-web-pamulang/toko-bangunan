@@ -3,7 +3,7 @@
 class ConfigDB
 {
     private $host = 'localhost';
-    private $db_name = 'database_class';
+    private $db_name = 'toko_bangunan';
     private $username = 'root';
     private $password = '';
     private $conn;

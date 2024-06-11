@@ -10,59 +10,110 @@
 </head>
 <body>
     <?php
+        ini_set('display_errors', '1');
+        ini_set('display_startup_errors', '1');
+        error_reporting(E_ALL);
+
+        date_default_timezone_set('Asia/Jakarta');
         require_once 'config_db.php';
 
         $db = new ConfigDB();
         $conn = $db->connect();
+        $result = [];
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $name = $_POST['name'];
-            $price = $_POST['price'];
-            $category = $_POST['category'];
-            $stock = $_POST['stock'];
+            $conn->begin_transaction();
 
-            $query = $db->update('products', [
-                'name' => $name,
-                'price' => $price,
-                'category' => $category,
-                'stock' => $stock
-            ], $_GET['id']);
+            try {
+                $name = $_POST['name'];
+                $price = $_POST['price'];
+                $category = $_POST['id_category'];
+                $pembeli = $_POST['id_pembeli'];
+                $stock = $_POST['stock'];
+                $usedStock = $_POST['used_stock'];
+                $returnStock = $_POST['return_stock'];
+                $updatedAt = date('Y-m-d H:i:s');
 
-            if ($query) {
-                echo "<div class='alert alert-success mt-3' role='alert'>Data updated successfully</div>";
-            } else {
-                echo "<div class='alert alert-danger mt-3' role='alert'>Error: " . $query . "<br>" . $conn->error . "</div>";
+                // Calculate new stock value
+                $newStock = $stock + $returnStock - $usedStock;
+
+                // Ensure stock does not go negative
+                if ($newStock < 0) {
+                    throw new Exception("Stock cannot be negative.");
+                }
+
+                $query = "UPDATE products SET name='$name', price='$price', id_category='$category', id_pembeli='$pembeli', stock='$newStock', updated_at='$updatedAt' WHERE id=" . $_GET['id'];
+
+                if ($conn->query($query) === TRUE) {
+                    $conn->commit();
+                    echo "<div class='alert alert-success mt-3' role='alert'>Data updated successfully</div>";
+                } else {
+                    $conn->rollback();
+                    echo "<div class='alert alert-danger mt-3' role='alert'>Error updating data: " . $conn->error . "</div>";
+                }
+
+                $result = $conn->query("SELECT * FROM products WHERE id=" . $_GET['id'])->fetch_assoc();
+            } catch (Exception $e) {
+                $conn->rollback();
+                echo "<div class='alert alert-danger mt-3' role='alert'>Error: " . $e->getMessage() . "</div>";
             }
-            $result = $db->select("products", ['AND id=' => $_GET['id']]);
         } else {
-            $result = $db->select("products", ['AND id=' => $_GET['id']]);
+            $result = $conn->query("SELECT * FROM products WHERE id=" . $_GET['id'])->fetch_assoc();
         }
     ?>
     <div class="container">
-        <h1 class="text-center mt-5">Ubah Data</h1>
+        <h1 class="text-center mt-5">Ubah Data Barang</h1>
         <form action="" method="post">
             <div class="form-group">
-                <label for="nameInput">Name</label>
-                <input type="text" class="form-control" id="nameInput" name="name" placeholder="Enter Name" required value="<?php echo $result[0]['name'] ?>">
+                <label for="nameInput">Nama Barang</label>
+                <input type="text" class="form-control" id="nameInput" name="name" placeholder="Enter Name" required value="<?php echo isset($result['name']) ? $result['name'] : '' ?>">
             </div>
             <div class="form-group">
-                <label for="nameInput">Price</label>
-                <input type="number" class="form-control" id="nameInput" name="price" placeholder="Enter Price" required value="<?php echo $result[0]['price'] ?>">
+                <label for="priceInput">Harga Barang</label>
+                <input type="number" class="form-control" id="priceInput" name="price" placeholder="Enter Price" required value="<?php echo isset($result['price']) ? $result['price'] : '' ?>">
             </div>
             <div class="form-group">
-                <label for="nameInput">Category</label>
-                <input type="text" class="form-control" id="nameInput" name="category" placeholder="Enter Category" required value="<?php echo $result[0]['category'] ?>">
+                <label for="categorySelect">Kategori</label>
+                <select class="form-control" id="categorySelect" name="id_category" required>
+                    <option value="">Pilih Kategori</option>
+                    <?php
+                        $categories = $conn->query("SELECT id_category, nama FROM categories");
+                        while ($row = $categories->fetch_assoc()) {
+                            $selected = ($row['id_category'] == $result['id_category']) ? 'selected' : '';
+                            echo "<option value='{$row['id_category']}' $selected>{$row['nama']}</option>";
+                        }
+                    ?>
+                </select>
             </div>
             <div class="form-group">
-                <label for="nameInput">Stock</label>
-                <input type="number" class="form-control" id="nameInput" name="stock" placeholder="Enter Stock" required value="<?php echo $result[0]['stock'] ?>">
+                <label for="pembeliSelect">Nama Pembeli</label>
+                <select class="form-control" id="pembeliSelect" name="id_pembeli" required>
+                    <option value="">Pilih Nama Pembeli</option>
+                    <?php
+                        $pembeli = $conn->query("SELECT id_pembeli, nama_pembeli FROM pembeli");
+                        while ($row = $pembeli->fetch_assoc()) {
+                            $selected = ($row['id_pembeli'] == $result['id_pembeli']) ? 'selected' : '';
+                            echo "<option value='{$row['id_pembeli']}' $selected>{$row['nama_pembeli']}</option>";
+                        }
+                    ?>
+                </select>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <a href="index.php" class="btn btn-info">Kembali</a>
+            <div class="form-group">
+                <label for="stockInput">Stock</label>
+                <input type="number" class="form-control" id="stockInput" name="stock" placeholder="Enter Stock" required readonly value="<?php echo isset($result['stock']) ? $result['stock'] : '' ?>">
+            </div>
+            <div class="form-group">
+                <label for="usedStockInput">Stok Terpakai</label>
+                <input type="number" class="form-control" id="usedStockInput" name="used_stock" placeholder="Enter Used Stock" value="0">
+            </div>
+            <div class="form-group">
+                <label for="returnStockInput">Tambah Stok</label>
+                <input type="number" class="form-control" id="returnStockInput" name="return_stock" placeholder="Enter Returned Stock" value="0">
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="index.php" class="btn btn-secondary">Kembali</a>
         </form>
-
         <?php
-
             $conn->close();
         ?>
     </div>
