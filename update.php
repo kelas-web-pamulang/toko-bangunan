@@ -19,6 +19,21 @@
 
         $db = new ConfigDB();
         $conn = $db->connect();
+        // function checkNum($number) {
+                //     if($number>1) {
+                //       throw new Exception("Value must be 1 or below");
+                //     }
+                //     return true;
+                //   }
+                  
+                //   try {
+                //       echo checkNum(2);	
+                //   } catch (Exception $e) {
+                //       echo 'Error : '.$e->getMessage();
+                //   }
+                      
+                //   echo 'Finish';                 
+                  //echo $nama;
         $result = [];
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {

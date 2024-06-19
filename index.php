@@ -121,12 +121,33 @@
                 ini_set('display_errors', '1');
                 ini_set('display_startup_errors', '1');
                 error_reporting(E_ALL);
-
+                require 'vendor/autoload.php';
+                \Sentry\init([
+                    'dsn' => 'https://e3070e8229ab011cc02e568dd40b07e6@o4507435891556352.ingest.us.sentry.io/4507435894833152',
+                    // Specify a fixed sample rate
+                    'traces_sample_rate' => 1.0,
+                    // Set a sampling rate for profiling - this is relative to traces_sample_rate
+                    'profiles_sample_rate' => 1.0,
+                  ]);
                 require_once 'config_db.php';
 
                 $db = new ConfigDB();
                 $conn = $db->connect();
-
+                // function checkNum($number) {
+                //     if($number>1) {
+                //       throw new Exception("Value must be 1 or below");
+                //     }
+                //     return true;
+                //   }
+                  
+                //   try {
+                //       echo checkNum(2);	
+                //   } catch (Exception $e) {
+                //       echo 'Error : '.$e->getMessage();
+                //   }
+                      
+                //   echo 'Finish';                 
+                //echo $nama;
                 $query = "SELECT a.id, a.name, a.price, b.nama, c.nama_pembeli, a.stock, a.created_at
                           FROM products a 
                           LEFT JOIN categories b ON a.id_category = b.id_category
