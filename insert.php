@@ -43,7 +43,7 @@
                 ?>
             </div>
             <div class="form-group">
-                <label for="nameInput">Nama Pembeli</label>
+                <label for="nameInput">Nama Pemasok</label>
                 <?php
                     $nameInput = $conn->query("SELECT id_pembeli, nama_pembeli FROM pembeli");
                     echo "<select class='form-control id='nameInput' name='id_pembeli' required>";

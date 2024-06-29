@@ -50,11 +50,11 @@
         <form action="" method="post">
             <div class="form-group mt-5">
                 <label for="emailInput">Email</label>
-                <input type="email" class="form-control" id="emailInput" name="email" placeholder="Enter Email" required>
+                <input type="email" class="form-control" id="emailInput" name="email" placeholder="Masukan Email" required>
             </div>
             <div class="form-group">
                 <label for="passwordInput">Password</label>
-                <input type="password" class="form-control" id="passwordInput" name="password" placeholder="Enter Password" required>
+                <input type="password" class="form-control" id="passwordInput" name="password" placeholder="Masukan Password" required>
             </div>
             <div class="mt-5">
                 <button type="submit" class="btn btn-primary">Login</button>

@@ -73,6 +73,13 @@
             background-color: #e9ecef;
         }
     </style>
+    <script>
+        function confirmDelete(deleteUrl) {
+            if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+                window.location.href = deleteUrl;
+            }
+        }
+    </script>
 </head>
 <body>
     <header>
@@ -111,7 +118,7 @@
                     <th>Name</th>
                     <th>Price</th>
                     <th>Category</th>
-                    <th>Pembeli</th>
+                    <th>Pemasok</th>
                     <th>Stock</th>
                     <th>Tgl. Buat</th>
                     <th colspan="2">Pilihan</th>
@@ -133,6 +140,7 @@
 
                 $db = new ConfigDB();
                 $conn = $db->connect();
+
                 // function checkNum($number) {
                 //     if($number>1) {
                 //       throw new Exception("Value must be 1 or below");
@@ -147,7 +155,8 @@
                 //   }
                       
                 //   echo 'Finish';                 
-                //echo $nama;
+                echo $nama;
+                
                 $query = "SELECT a.id, a.name, a.price, b.nama, c.nama_pembeli, a.stock, a.created_at
                           FROM products a 
                           LEFT JOIN categories b ON a.id_category = b.id_category
@@ -191,7 +200,7 @@
                         echo "<td>".$row['stock']."</td>";
                         echo "<td>".$row['created_at']."</td>";
                         echo "<td><a class='btn btn-sm btn-info' href='update.php?id=$row[id]'>Update</a></td>";
-                        echo "<td><a class='btn btn-sm btn-danger' href='index.php?delete=$row[id]'>Delete</a></td>";
+                        echo "<td><a class='btn btn-sm btn-danger' href='javascript:void(0);' onclick='confirmDelete(\"index.php?delete=$row[id]\")'>Delete</a></td>";
                         echo "</tr>";
                     }
                 } else {
@@ -203,3 +212,5 @@
             </table>
         </div>
     </div>
+</body>
+</html>

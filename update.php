@@ -19,21 +19,7 @@
 
         $db = new ConfigDB();
         $conn = $db->connect();
-        // function checkNum($number) {
-                //     if($number>1) {
-                //       throw new Exception("Value must be 1 or below");
-                //     }
-                //     return true;
-                //   }
-                  
-                //   try {
-                //       echo checkNum(2);	
-                //   } catch (Exception $e) {
-                //       echo 'Error : '.$e->getMessage();
-                //   }
-                      
-                //   echo 'Finish';                 
-                  //echo $nama;
+
         $result = [];
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -78,7 +64,7 @@
     ?>
     <div class="container">
         <h1 class="text-center mt-5">Ubah Data Barang</h1>
-        <form action="" method="post">
+        <form id="updateForm" action="" method="post">
             <div class="form-group">
                 <label for="nameInput">Nama Barang</label>
                 <input type="text" class="form-control" id="nameInput" name="name" placeholder="Enter Name" required value="<?php echo isset($result['name']) ? $result['name'] : '' ?>">
@@ -101,7 +87,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="pembeliSelect">Nama Pembeli</label>
+                <label for="pembeliSelect">Nama Pemasok</label>
                 <select class="form-control" id="pembeliSelect" name="id_pembeli" required>
                     <option value="">Pilih Nama Pembeli</option>
                     <?php
@@ -132,5 +118,19 @@
             $conn->close();
         ?>
     </div>
+    <script>
+        document.getElementById('updateForm').addEventListener('submit', function(event) {
+            var stock = parseInt(document.getElementById('stockInput').value);
+            var usedStock = parseInt(document.getElementById('usedStockInput').value);
+            var returnStock = parseInt(document.getElementById('returnStockInput').value);
+
+            var newStock = stock + returnStock - usedStock;
+
+            if (newStock < 0) {
+                event.preventDefault();
+                alert('Stok terpakai tidak boleh melebihi stok yang ada.');
+            }
+        });
+    </script>
 </body>
 </html>

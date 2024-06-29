@@ -61,37 +61,44 @@
                 <input type="password" class="form-control" id="passwordInput" name="password" placeholder="Enter Password" required>
             </div>
             <div class="mt-4">
-            <button type="submit" class="btn btn-primary">Register</button>
-            <a href="login.php" class="btn btn-secondary mt-3">Login</a>
+                <button type="submit" class="btn btn-primary">Register</button>
+                <a href="login.php" class="btn btn-secondary mt-3">Login</a>
             </div>
         </form>
         <?php
-         ini_set('display_errors', '1');
-         ini_set('display_startup_errors', '1');
-         error_reporting(E_ALL);
+            ini_set('display_errors', '1');
+            ini_set('display_startup_errors', '1');
+            error_reporting(E_ALL);
 
-         require_once 'config_db.php';
+            require_once 'config_db.php';
 
-         $db = new ConfigDB();
-         $conn = $db->connect();
+            $db = new ConfigDB();
+            $conn = $db->connect();
 
-         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-             $name = $_POST['name'];
-             $email = $_POST['email'];
-             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-             $createAt = date('Y-m-d H:i:s');
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $name = $_POST['name'];
+                $email = $_POST['email'];
+                $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $createAt = date('Y-m-d H:i:s');
 
-             $query = "INSERT INTO users (email, full_name, password, role, created_at) VALUES ('$email', '$name', '$password', 'admin', '$createAt')";
-             $queryExecute = $conn->query($query);
+                // Cek apakah email sudah ada di database
+                $checkEmailQuery = "SELECT * FROM users WHERE email='$email'";
+                $result = $conn->query($checkEmailQuery);
 
+                if ($result->num_rows > 0) {
+                    echo "<div class='alert alert-danger mt-3' role='alert'>Email sudah terdaftar, silakan gunakan email lain!</div>";
+                } else {
+                    // Jika email belum ada, maka lakukan proses insert
+                    $query = "INSERT INTO users (email, full_name, password, role, created_at) VALUES ('$email', '$name', '$password', 'admin', '$createAt')";
+                    $queryExecute = $conn->query($query);
 
-             if ($queryExecute) {
-                 echo "<div class='alert alert-success mt-3' role='alert'>Register berhasil silahkan login!</div>";
-             } else {
-                 echo "<div class='alert alert-danger mt-3' role='alert'>Error: " . $query . "<br>" . $conn->error . "</div>";
-             }
-         }
-            // PHP code untuk proses registrasi dan pesan kesalahan
+                    if ($queryExecute) {
+                        echo "<div class='alert alert-success mt-3' role='alert'>Register berhasil silahkan login!</div>";
+                    } else {
+                        echo "<div class='alert alert-danger mt-3' role='alert'>Error: " . $query . "<br>" . $conn->error . "</div>";
+                    }
+                }
+            }
         ?>
     </div>
 </body>
