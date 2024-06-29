@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 11 Jun 2024 pada 16.57
--- Versi Server: 10.1.26-MariaDB
--- PHP Version: 7.1.9
+-- Waktu pembuatan: 19 Jun 2024 pada 11.16
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -31,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `categories` (
   `id_category` int(25) NOT NULL,
   `nama` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `categories`
@@ -50,7 +49,7 @@ INSERT INTO `categories` (`id_category`, `nama`) VALUES
 CREATE TABLE `pembeli` (
   `id_pembeli` int(11) NOT NULL,
   `nama_pembeli` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `pembeli`
@@ -71,30 +70,30 @@ INSERT INTO `pembeli` (`id_pembeli`, `nama_pembeli`) VALUES
 
 CREATE TABLE `products` (
   `id` int(11) NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `price` decimal(10,0) DEFAULT NULL,
   `id_category` int(100) NOT NULL,
   `id_pembeli` int(25) NOT NULL,
-  `stock` varchar(10) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `stock` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `products`
 --
 
 INSERT INTO `products` (`id`, `name`, `price`, `id_category`, `id_pembeli`, `stock`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(6, 'Batu bata', '43000', 1, 2, '30', '2024-06-04 13:10:36', '2024-06-11 20:58:35', NULL),
-(7, 'Semen 10 Roda', '14000', 2, 1, '26', '2024-06-04 13:14:44', '2024-06-04 18:43:15', NULL),
-(8, 'bata merah', '10000', 1, 2, '28', '2024-06-04 13:15:32', '2024-06-11 16:30:27', NULL),
-(9, 'bata hebel', '25000', 1, 5, '23', '2024-06-04 16:34:09', '2024-06-11 20:52:32', NULL),
-(10, 'bata putih (hebel)', '30000', 1, 1, '5', '2024-06-11 11:23:39', NULL, '2024-06-11 20:58:52'),
-(11, 'semen empat roda', '70000', 2, 3, '2', '2024-06-11 11:24:10', '2024-06-11 20:52:50', NULL),
-(12, 'semen padang', '45000', 2, 2, '6', '2024-06-11 11:26:08', NULL, NULL),
-(13, 'semen bandung', '56000', 2, 4, '40', '2024-06-11 15:52:13', NULL, NULL),
-(14, 'semen papua', '27000', 2, 1, '22', '2024-06-11 16:02:19', NULL, '2024-06-11 21:02:24');
+(6, 'Batu bata', 43000, 1, 2, '30', '2024-06-04 13:10:36', '2024-06-11 20:58:35', NULL),
+(7, 'Semen 10 Roda', 14000, 2, 1, '26', '2024-06-04 13:14:44', '2024-06-04 18:43:15', NULL),
+(8, 'bata merah', 10000, 1, 2, '28', '2024-06-04 13:15:32', '2024-06-11 16:30:27', NULL),
+(9, 'bata hebel', 25000, 1, 5, '23', '2024-06-04 16:34:09', '2024-06-11 20:52:32', NULL),
+(10, 'bata putih (hebel)', 30000, 1, 1, '5', '2024-06-11 11:23:39', NULL, '2024-06-11 20:58:52'),
+(11, 'semen empat roda', 70000, 2, 3, '2', '2024-06-11 11:24:10', '2024-06-11 20:52:50', NULL),
+(12, 'semen padang', 45000, 2, 2, '6', '2024-06-11 11:26:08', NULL, NULL),
+(13, 'semen bandung', 56000, 2, 4, '40', '2024-06-11 15:52:13', NULL, NULL),
+(14, 'semen papua', 27000, 2, 1, '22', '2024-06-11 16:02:19', NULL, '2024-06-11 21:02:24');
 
 -- --------------------------------------------------------
 
@@ -109,7 +108,7 @@ CREATE TABLE `users` (
   `password` varchar(100) NOT NULL,
   `role` varchar(15) NOT NULL,
   `created_at` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `users`
@@ -125,19 +124,19 @@ INSERT INTO `users` (`id`, `email`, `full_name`, `password`, `role`, `created_at
 --
 
 --
--- Indexes for table `categories`
+-- Indeks untuk tabel `categories`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`id_category`);
 
 --
--- Indexes for table `pembeli`
+-- Indeks untuk tabel `pembeli`
 --
 ALTER TABLE `pembeli`
   ADD PRIMARY KEY (`id_pembeli`);
 
 --
--- Indexes for table `products`
+-- Indeks untuk tabel `products`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`),
@@ -145,23 +144,23 @@ ALTER TABLE `products`
   ADD KEY `fk_pembeli` (`id_pembeli`);
 
 --
--- Indexes for table `users`
+-- Indeks untuk tabel `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `products`
+-- AUTO_INCREMENT untuk tabel `products`
 --
 ALTER TABLE `products`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
